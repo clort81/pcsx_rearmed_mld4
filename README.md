@@ -1,6 +1,14 @@
 PCSX-ReARMed - yet another PCSX fork
 ====================================
 
+Clort's tweaks for Maemo-Leste, Motorola Droid4.  
+
+* Makefile, Configure, and a few UI tweaks.
+
+* Debianization, menu entry.
+
+* More notes in readme_mld4.txt
+
 [![Build Status](https://travis-ci.org/notaz/pcsx_rearmed.svg?branch=master)](https://travis-ci.org/notaz/pcsx_rearmed)
 
 *see [readme.txt](readme.txt) for more complete documentation*
