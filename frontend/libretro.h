@@ -246,7 +246,8 @@ enum retro_key
    RETROK_CLEAR          = 12,
    RETROK_RETURN         = 13,
    RETROK_PAUSE          = 19,
-   RETROK_ESCAPE         = 27,
+   // was whatever - clort RETROK_ESCAPE         = 27,
+   RETROK_ESCAPE         = 31, // now 'q'
    RETROK_SPACE          = 32,
    RETROK_EXCLAIM        = 33,
    RETROK_QUOTEDBL       = 34,

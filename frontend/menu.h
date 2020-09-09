@@ -2,6 +2,7 @@ void menu_init(void);
 void menu_prepare_emu(void);
 void menu_loop(void);
 void menu_finish(void);
+void menu_show_splash(void); // Clort show a splash screen
 
 void menu_notify_mode_change(int w, int h, int bpp);
 

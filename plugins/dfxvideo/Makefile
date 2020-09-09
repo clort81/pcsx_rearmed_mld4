@@ -1,4 +1,4 @@
-CFLAGS += -Wall -ggdb -O2
+CFLAGS += -Wall -O2
 CFLAGS += -fno-strict-aliasing -ffast-math
 CFLAGS += -I../../include
 

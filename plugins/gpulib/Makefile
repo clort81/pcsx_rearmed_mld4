@@ -1,4 +1,4 @@
-CFLAGS += -ggdb -Wall
+CFLAGS += -Wall
 ifndef DEBUG
 CFLAGS += -O2
 endif

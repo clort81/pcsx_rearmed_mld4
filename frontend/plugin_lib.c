@@ -275,10 +275,10 @@ static void pl_vout_set_mode(int w, int h, int raw_w, int raw_h, int bpp)
 			hud_msg[0] = 0;
 		}
 	}
-	else if (scanlines != 0 && scanline_level != 100 && bpp == 16) {
-		if (h <= 256)
-			pl_vout_scale_h = 2;
-	}
+//clort disable scanlines	else if (scanlines != 0 && scanline_level != 100 && bpp == 16) {
+//		if (h <= 256)
+//			pl_vout_scale_h = 2;
+//	}
 #endif
 	vout_w *= pl_vout_scale_w;
 	vout_h *= pl_vout_scale_h;
@@ -378,21 +378,21 @@ static void pl_vout_flip(const void *vram, int stride, int bgr24, int w, int h)
 		neon_eagle2x_16_16(src, (void *)dest, w,
 			stride * 2, dstride * 2, h);
 	}
-	else if (scanlines != 0 && scanline_level != 100)
-	{
-		int l = scanline_level * 2048 / 100;
-		int stride_0 = pl_vout_scale_h >= 2 ? 0 : stride;
-
-		h1 *= pl_vout_scale_h;
-		for (; h1 >= 2; h1 -= 2)
-		{
-			bgr555_to_rgb565(dest, src, w * 2);
-			dest += dstride * 2, src += stride_0;
-
-			bgr555_to_rgb565_b(dest, src, w * 2, l);
-			dest += dstride * 2, src += stride;
-		}
-	}
+//clort disable scanlines	else if (scanlines != 0 && scanline_level != 100)
+//	{
+//		int l = scanline_level * 2048 / 100;
+//		int stride_0 = pl_vout_scale_h >= 2 ? 0 : stride;
+//
+//		h1 *= pl_vout_scale_h;
+//		for (; h1 >= 2; h1 -= 2)
+//		{
+//			bgr555_to_rgb565(dest, src, w * 2);
+//			dest += dstride * 2, src += stride_0;
+//
+//			bgr555_to_rgb565_b(dest, src, w * 2, l);
+//			dest += dstride * 2, src += stride;
+//		}
+//	}
 #endif
 	else
 	{
@@ -560,6 +560,7 @@ static void update_analog_nub_adjust(int *x_, int *y_)
 
 static void update_analogs(void)
 {
+/* clort - disabling broken analogs
 	int *nubp[2] = { in_a1, in_a2 };
 	int vals[2];
 	int i, a, v, ret;
@@ -589,6 +590,7 @@ static void update_analogs(void)
 
 	}
 	//printf("%4d %4d %4d %4d\n", in_a1[0], in_a1[1], in_a2[0], in_a2[1]);
+clort */
 }
 
 static void update_input(void)

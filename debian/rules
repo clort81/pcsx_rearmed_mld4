@@ -1,0 +1,78 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+
+%:
+	dh $@
+
+
+# dh_make generated override targets
+# This is example for Cmake (See https://bugs.debian.org/641051 )
+#override_dh_auto_configure:
+
+build: build-stamp
+
+build-stamp:
+	dh_testdir
+	./configure --platform=mldroid4 --gpu=neon --sound-drivers=alsa --enable-neon
+	$(MAKE)
+	##strip pcsx
+	##strip plugins/gpu_neon/gpu_neon.so
+	##strip plugins/gpu_unai/gpu_unai.so
+	##strip plugins/gpu-gles/gpu_gles.so
+	##strip plugins/dfxvideo/gpu_peops.so
+	##strip plugins/spunull/spunull.so
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+	dh_clean
+	$(MAKE) clean clean_plugins
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_installdirs
+	mkdir -p   /home/user/.pcsx
+	chmod 777  /home/user/.pcsx/
+	cp -rv .pcsx /home/user/
+	chown -R user:user /home/user/.pcsx/
+	dh_install
+
+binary-indep: build install
+
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_installmenu
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_makeshlibs
+	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+	dh_gencontrol
+	#maemo-optify
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install
+

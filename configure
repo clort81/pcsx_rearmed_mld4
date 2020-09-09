@@ -17,7 +17,7 @@ compile_object()
 
 compile_binary()
 {
-  c="$CC $CFLAGS $TMPC -o $TMPB $LDFLAGS $MAIN_LDLIBS $@"
+  c="$CC -O3 $CFLAGS $TMPC -o $TMPB $LDFLAGS $MAIN_LDLIBS $@"
   echo $c >> config.log
   $c >> config.log 2>&1
 }
@@ -37,8 +37,8 @@ check_define_val()
 # setting options to "yes" or "no" will make that choice default,
 # "" means "autodetect".
 
-platform_list="generic pandora maemo caanoo libretro"
-platform="generic"
+platform_list="generic pandora maemo mldroid4 caanoo libretro"
+platform="mldroid4"
 builtin_gpu_list="peops unai neon"
 builtin_gpu=""
 sound_driver_list="oss alsa pulseaudio sdl libretro"
@@ -93,6 +93,16 @@ set_platform()
     optimize_cortexa8="yes"
     have_arm_neon="yes"
     need_xlib="yes"
+    ;;
+  mldroid4)  # Clort adding config for maemo-leste droid 4
+    #Clort might want add gles
+    have_gles="yes" # Clort probably
+    sound_drivers="alsa"
+    optimize_cortexa9="yes"
+    have_arm_neonvfp="yes"
+    need_sdl="yes" # Clort not sure if want
+    need_libpicofe="yes"  # Clort not sure if want
+    ram_fixed="yes" # Clort not sure if want
     ;;
   maemo)
     ram_fixed="yes"
@@ -244,7 +254,9 @@ arm*)
   fi
 
   # automatically set mfpu and mfloat-abi if they are not set
-  if [ "$have_arm_neon" = "yes" ]; then
+  if [ "$have_arm_neonvfp" = "yes" ]; then
+    fpu="neon-fp16" # Clort - should be best for omap4
+  elif [ "$have_arm_neon" = "yes" ]; then
     fpu="neon"
   elif [ "$have_armv6" = "yes" ]; then
     fpu="vfp"
@@ -257,6 +269,11 @@ arm*)
       echo "$CFLAGS" | grep -q -- '-mfloat-abi=' || CFLAGS="$CFLAGS -mfloat-abi=softfp"
       echo "$ASFLAGS" | grep -q -- '-mfloat-abi=' || ASFLAGS="$ASFLAGS -mfloat-abi=softfp"
     fi
+  fi
+  # Clort - Droid4 has omap4 - cortexa9
+  if [ "$optimize_cortexa9" = "yes" ]; then
+    CFLAGS="$CFLAGS -O3 -mcpu=cortex-a9 -mtune=cortex-a9  -mfloat-abi=hard -funsafe-math-optimizations"
+    ASFLAGS="$ASFLAGS -mcpu=cortex-a9 -mtune=cortex-a9  -mfloat-abi=hard -funsafe-math-optimizations"
   fi
 
   # must disable thumb as recompiler can't handle it

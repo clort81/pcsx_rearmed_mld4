@@ -57,9 +57,9 @@ int hud_new_msg;
 static void make_path(char *buf, size_t size, const char *dir, const char *fname)
 {
 	if (fname)
-		snprintf(buf, size, ".%s%s", dir, fname);
+		snprintf(buf, size, "%s%s", dir, fname);
 	else
-		snprintf(buf, size, ".%s", dir);
+		snprintf(buf, size, "%s", dir);
 }
 #define MAKE_PATH(buf, dir, fname) \
 	make_path(buf, sizeof(buf), dir, fname)
@@ -105,11 +105,12 @@ static void set_default_paths(void)
 #ifndef NO_FRONTEND
 	snprintf(Config.PatchesDir, sizeof(Config.PatchesDir), "." PATCHES_DIR);
 	MAKE_PATH(Config.Mcd1, MEMCARD_DIR, "card1.mcd");
+	MAKE_PATH(Config.Mcd1, MEMCARD_DIR, "card1.mcd");
 	MAKE_PATH(Config.Mcd2, MEMCARD_DIR, "card2.mcd");
-	strcpy(Config.BiosDir, "bios");
+	strcpy(Config.BiosDir, "/home/user/.pcsx/bios"); // Clort dir config is a mess!
 #endif
 
-	strcpy(Config.PluginsDir, "plugins");
+	strcpy(Config.PluginsDir, "/usr/games/plugins"); // Clort this is system-wide, ok?
 	strcpy(Config.Gpu, "builtin_gpu");
 	strcpy(Config.Spu, "builtin_spu");
 	strcpy(Config.Cdr, "builtin_cdr");
@@ -488,7 +489,7 @@ static void check_memcards(void)
 	int i;
 
 	for (i = 1; i <= 9; i++) {
-		snprintf(buf, sizeof(buf), ".%scard%d.mcd", MEMCARD_DIR, i);
+		snprintf(buf, sizeof(buf), "%scard%d.mcd", MEMCARD_DIR, i); // Clort removed dot
 
 		f = fopen(buf, "rb");
 		if (f == NULL) {
@@ -639,9 +640,22 @@ int main(int argc, char *argv[])
 		}
 	}
 	else
-		menu_loop();
+	{
+/* Clort - giving up on this for now
+		menu_show_splash(); // Clort - show us a splash screen
+		sleep(0.2); // Clort
+		menu_show_splash(); // Clort - show us a splash screen
+		sleep(0.2); // Clort
+		//menu_loop();
+		menu_show_splash(); // Clort - show us a splash screen
+		sleep(0.2); // Clort
+		//menu_loop();
+*/
+	}
 
 	pl_start_watchdog();
+
+// clort SysMessage(_("FUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU!"));
 
 	while (!g_emu_want_quit)
 	{
@@ -652,6 +666,8 @@ int main(int argc, char *argv[])
 		if (emu_action != SACTION_NONE)
 			do_emu_action();
 	}
+// clort SysPrintf("DID WE START??\n");
+//sleep(10); // clort
 
 	printf("Exit..\n");
 	ClosePlugins();
@@ -748,7 +764,7 @@ void SysUpdate() {
 
 int get_state_filename(char *buf, int size, int i) {
 	return get_gameid_filename(buf, size,
-		"." STATES_DIR "%.32s-%.9s.%3.3d", i);
+		 STATES_DIR "%.32s-%.9s.%3.3d", i); // Clort removed "."
 }
 
 int emu_check_state(int slot)
@@ -869,9 +885,9 @@ static int _OpenPlugins(void) {
 	if (Config.UseNet && !NetOpened) {
 		netInfo info;
 		char path[MAXPATHLEN];
-		char dotdir[MAXPATHLEN];
+		char dotdir[MAXPATHLEN] = "/home/user"; // Clort where else to put this? IDK
 
-		MAKE_PATH(dotdir, "/.pcsx/plugins/", NULL);
+		MAKE_PATH(dotdir, "/home/user/.pcsx/plugins/", NULL); // Clort yeesh - mess
 
 		strcpy(info.EmuName, "PCSX");
 		strncpy(info.CdromID, CdromId, 9);

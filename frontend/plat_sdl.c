@@ -39,16 +39,16 @@ static const struct in_default_bind in_sdl_defbinds[] = {
   { SDLK_r,      IN_BINDTYPE_PLAYER12, DKEY_R1 },
   { SDLK_e,      IN_BINDTYPE_PLAYER12, DKEY_L2 },
   { SDLK_t,      IN_BINDTYPE_PLAYER12, DKEY_R2 },
-  { SDLK_ESCAPE, IN_BINDTYPE_EMU, SACTION_ENTER_MENU },
-  { SDLK_F1,     IN_BINDTYPE_EMU, SACTION_SAVE_STATE },
-  { SDLK_F2,     IN_BINDTYPE_EMU, SACTION_LOAD_STATE },
-  { SDLK_F3,     IN_BINDTYPE_EMU, SACTION_PREV_SSLOT },
-  { SDLK_F4,     IN_BINDTYPE_EMU, SACTION_NEXT_SSLOT },
-  { SDLK_F5,     IN_BINDTYPE_EMU, SACTION_TOGGLE_FSKIP },
-  { SDLK_F6,     IN_BINDTYPE_EMU, SACTION_SCREENSHOT },
-  { SDLK_F7,     IN_BINDTYPE_EMU, SACTION_TOGGLE_FPS },
-  { SDLK_F8,     IN_BINDTYPE_EMU, SACTION_SWITCH_DISPMODE },
-  { SDLK_F11,    IN_BINDTYPE_EMU, SACTION_TOGGLE_FULLSCREEN },
+  { SDLK_q,      IN_BINDTYPE_EMU, SACTION_ENTER_MENU }, // Clort remapped these for D4
+  { SDLK_1,     IN_BINDTYPE_EMU, SACTION_SAVE_STATE }, // Clort remapped these for D4
+  { SDLK_2,     IN_BINDTYPE_EMU, SACTION_LOAD_STATE }, // Clort remapped these for D4
+  { SDLK_3,     IN_BINDTYPE_EMU, SACTION_PREV_SSLOT }, // Clort remapped these for D4
+  { SDLK_4,     IN_BINDTYPE_EMU, SACTION_NEXT_SSLOT }, // Clort remapped these for D4
+  { SDLK_5,     IN_BINDTYPE_EMU, SACTION_TOGGLE_FSKIP }, // Clort remapped these for D4
+  { SDLK_6,     IN_BINDTYPE_EMU, SACTION_SCREENSHOT }, // Clort remapped these for D4
+  { SDLK_7,     IN_BINDTYPE_EMU, SACTION_TOGGLE_FPS }, // Clort remapped these for D4
+  { SDLK_8,     IN_BINDTYPE_EMU, SACTION_SWITCH_DISPMODE }, // Clort remapped these for D4
+  { SDLK_9,     IN_BINDTYPE_EMU, SACTION_TOGGLE_FULLSCREEN }, // Clort - was working, now not
   { SDLK_BACKSPACE, IN_BINDTYPE_EMU, SACTION_FAST_FORWARD },
   { 0, 0, 0 }
 };
@@ -60,7 +60,7 @@ const struct menu_keymap in_sdl_key_map[] =
   { SDLK_LEFT,   PBTN_LEFT },
   { SDLK_RIGHT,  PBTN_RIGHT },
   { SDLK_RETURN, PBTN_MOK },
-  { SDLK_ESCAPE, PBTN_MBACK },
+  { SDLK_q, PBTN_MBACK },
   { SDLK_SEMICOLON,    PBTN_MA2 },
   { SDLK_QUOTE,        PBTN_MA3 },
   { SDLK_LEFTBRACKET,  PBTN_L },

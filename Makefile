@@ -2,9 +2,9 @@
 
 # default stuff goes here, so that config can override
 TARGET ?= pcsx
-CFLAGS += -Wall -ggdb -Iinclude -ffast-math
+CFLAGS += -Wall -Iinclude -ffast-math
 ifndef DEBUG
-CFLAGS += -O2 -DNDEBUG
+CFLAGS += -mcpu=cortex-a9 -mtune=cortex-a9 -mfpu=neon-fp16 -mfloat-abi=hard -funsafe-math-optimizations -DNDEBUG
 endif
 CXXFLAGS += $(CFLAGS)
 #DRC_DBG = 1
@@ -146,6 +146,24 @@ OBJS += frontend/cspace_arm.o
 endif
 endif
 
+ifeq "$(PLATFORM)" "mldroid4"
+OBJS += frontend/libpicofe/in_sdl.o
+OBJS += frontend/libpicofe/plat_sdl.o
+OBJS += frontend/libpicofe/plat_dummy.o
+OBJS += frontend/libpicofe/linux/in_evdev.o
+OBJS += frontend/plat_sdl.o
+ifeq "$(HAVE_GLES)" "1"
+OBJS += frontend/libpicofe/gl.o frontend/libpicofe/gl_platform.o
+LDLIBS += $(LDLIBS_GLES)
+frontend/libpicofe/plat_sdl.o: CFLAGS += -DHAVE_GLES $(CFLAGS_GLES)
+frontend/libpicofe/gl_platform.o: CFLAGS += -DHAVE_GLES $(CFLAGS_GLES)
+frontend/libpicofe/gl.o: CFLAGS += -DHAVE_GLES $(CFLAGS_GLES)
+frontend/plat_sdl.o: CFLAGS += -DHAVE_GLES $(CFLAGS_GLES)
+endif
+USE_PLUGIN_LIB = 1
+USE_FRONTEND = 1
+endif
+
 ifeq "$(PLATFORM)" "generic"
 OBJS += frontend/libpicofe/in_sdl.o
 OBJS += frontend/libpicofe/plat_sdl.o
@@ -163,6 +181,7 @@ endif
 USE_PLUGIN_LIB = 1
 USE_FRONTEND = 1
 endif
+
 ifeq "$(PLATFORM)" "pandora"
 OBJS += frontend/libpicofe/pandora/plat.o
 OBJS += frontend/libpicofe/linux/fbdev.o frontend/libpicofe/linux/xenv.o

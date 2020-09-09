@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=PcsxreArmed-MLD4
+Comment=Playstation Emulator for Droid4 Leste
+Encoding=UTF-8
+Exec=pcsx
+Icon=pcsxmld4.png
+Categories=Game;
+Terminal=false

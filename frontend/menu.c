@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <dirent.h>
 
-#include "main.h"
+#include "main.h"  // Clort has dirs among other things
 #include "menu.h"
 #include "config.h"
 #include "plugin.h"
@@ -115,7 +115,7 @@ static const char *spu_plugins[16];
 static const char *memcards[32];
 static int bios_sel, gpu_plugsel, spu_plugsel;
 
-#ifndef UI_FEATURES_H
+// clort - always want ui features #ifndef UI_FEATURES_H
 #define MENU_BIOS_PATH "bios/"
 #define MENU_SHOW_VARSCALER 0
 #define MENU_SHOW_VOUTMODE 1
@@ -124,9 +124,9 @@ static int bios_sel, gpu_plugsel, spu_plugsel;
 #define MENU_SHOW_VIBRATION 0
 #define MENU_SHOW_DEADZONE 0
 #define MENU_SHOW_MINIMIZE 0
-#define MENU_SHOW_FULLSCREEN 1
-#define MENU_SHOW_VOLUME 0
-#endif
+#define MENU_SHOW_FULLSCREEN 1 // clort definitely want fullscreentoggle
+#define MENU_SHOW_VOLUME 1
+// clort #endif
 
 static int min(int x, int y) { return x < y ? x : y; }
 static int max(int x, int y) { return x > y ? x : y; }
@@ -473,9 +473,9 @@ static char *get_cd_label(void)
 static void make_cfg_fname(char *buf, size_t size, int is_game)
 {
 	if (is_game)
-		snprintf(buf, size, "." PCSX_DOT_DIR "cfg/%.32s-%.9s.cfg", get_cd_label(), CdromId);
+		snprintf(buf, size, PCSX_DOT_DIR "cfg/%.32s-%.9s.cfg", get_cd_label(), CdromId); // Clort removed "."
 	else
-		snprintf(buf, size, "." PCSX_DOT_DIR "%s", cfgfile_basename);
+		snprintf(buf, size, PCSX_DOT_DIR "%s", cfgfile_basename); // Clort removed "."
 }
 
 static void keys_write_all(FILE *f);
@@ -483,18 +483,20 @@ static char *mystrip(char *str);
 
 static int menu_write_config(int is_game)
 {
-	char cfgfile[MAXPATHLEN];
+	char cfgfile[MAXPATHLEN] = "/home/user/.pcsx/pcsx.cfg";  // Clort should be part of .h 
 	FILE *f;
 	int i;
 
 	config_save_counter++;
 
-	make_cfg_fname(cfgfile, sizeof(cfgfile), is_game);
+	// Clort - dunno why this make_cfg_fname(cfgfile, sizeof(cfgfile), is_game);
 	f = fopen(cfgfile, "w");
 	if (f == NULL) {
 		printf("menu_write_config: failed to open: %s\n", cfgfile);
 		return -1;
 	}
+	else
+		printf("menu_write_config: succeeded to open: %s\n", cfgfile);
 
 	for (i = 0; i < ARRAY_SIZE(config_data); i++) {
 		fprintf(f, "%s = ", config_data[i].name);
@@ -532,7 +534,7 @@ static int menu_do_last_cd_img(int is_get)
 	FILE *f;
 	int i, ret = -1;
 
-	snprintf(path, sizeof(path), "." PCSX_DOT_DIR "lastcdimg.txt");
+	snprintf(path, sizeof(path), PCSX_DOT_DIR "lastcdimg.txt"); // Clort removed "."
 	f = fopen(path, is_get ? "r" : "w");
 	if (f == NULL) {
 		ret = -1;
@@ -578,18 +580,20 @@ static void keys_load_all(const char *cfg);
 
 static int menu_load_config(int is_game)
 {
-	char cfgfile[MAXPATHLEN];
+	char cfgfile[MAXPATHLEN] = "/home/user/.pcsx/pcsx.cfg"; // Clort - dunno where to put this
 	int i, ret = -1;
 	long size;
 	char *cfg;
 	FILE *f;
 
-	make_cfg_fname(cfgfile, sizeof(cfgfile), is_game);
+	// Clort - dunno why this make_cfg_fname(cfgfile, sizeof(cfgfile), is_game);
 	f = fopen(cfgfile, "r");
 	if (f == NULL) {
 		printf("menu_load_config: failed to open: %s\n", cfgfile);
 		goto fail;
 	}
+	else
+		printf("menu_load_config: succeeded to open: %s\n", cfgfile);
 
 	fseek(f, 0, SEEK_END);
 	size = ftell(f);
@@ -689,14 +693,14 @@ fail:
 		if (memcard1_sel == 0)
 			strcpy(Config.Mcd1, "none");
 		else if (memcards[memcard1_sel] != NULL)
-			snprintf(Config.Mcd1, sizeof(Config.Mcd1), ".%s%s",
+			snprintf(Config.Mcd1, sizeof(Config.Mcd1), "%s%s", // Clort removed "."
 				MEMCARD_DIR, memcards[memcard1_sel]);
 	}
 	if ((unsigned int)memcard2_sel < ARRAY_SIZE(memcards)) {
 		if (memcard2_sel == 0)
 			strcpy(Config.Mcd2, "none");
 		else if (memcards[memcard2_sel] != NULL)
-			snprintf(Config.Mcd2, sizeof(Config.Mcd2), ".%s%s",
+			snprintf(Config.Mcd2, sizeof(Config.Mcd2), "%s%s", // Clort removed "."
 				MEMCARD_DIR, memcards[memcard2_sel]);
 	}
 	if (strcmp(mcd1_old, Config.Mcd1) || strcmp(mcd2_old, Config.Mcd2))
@@ -1757,10 +1761,10 @@ static void handle_memcard_sel(void)
 {
 	strcpy(Config.Mcd1, "none");
 	if (memcard1_sel != 0)
-		snprintf(Config.Mcd1, sizeof(Config.Mcd1), ".%s%s", MEMCARD_DIR, memcards[memcard1_sel]);
+		snprintf(Config.Mcd1, sizeof(Config.Mcd1), "%s%s", MEMCARD_DIR, memcards[memcard1_sel]); // Clort removed "."
 	strcpy(Config.Mcd2, "none");
 	if (memcard2_sel != 0)
-		snprintf(Config.Mcd2, sizeof(Config.Mcd2), ".%s%s", MEMCARD_DIR, memcards[memcard2_sel]);
+		snprintf(Config.Mcd2, sizeof(Config.Mcd2), "%s%s", MEMCARD_DIR, memcards[memcard2_sel]); // Clort removed "."
 	LoadMcds(Config.Mcd1, Config.Mcd2);
 	draw_mc_bg();
 }
@@ -1901,7 +1905,7 @@ static void draw_frame_main(void)
 		snprintf(buff, sizeof(buff), "%.32s/%.9s (running as %s, with %s)",
 			 get_cd_label(), CdromId, Config.PsxType ? "PAL" : "NTSC",
 			 Config.HLE ? "HLE" : "BIOS");
-		smalltext_out16(4, 1, buff, 0x105f);
+		smalltext_out16(14, 1, buff, 0xae53); // clort was darkblue 0x105f
 	}
 
 	if (ready_to_go) {
@@ -1915,7 +1919,7 @@ static void draw_frame_main(void)
 		}
 		else
 			out = ltime_s;
-		smalltext_out16(4, 1 + me_sfont_h, out, 0x105f);
+		smalltext_out16(14, 1 + me_sfont_h, out, 0xc2d9); // clort was darkblue 0x105f
 	}
 }
 
@@ -2338,7 +2342,7 @@ static int qsort_strcmp(const void *p1, const void *p2)
 
 static void scan_bios_plugins(void)
 {
-	char fname[MAXPATHLEN];
+	char fname[MAXPATHLEN] = "/home/user/.pcsx/bios"; // Clort fixed dir for droid4
 	struct dirent *ent;
 	int bios_i, gpu_i, spu_i, mc_i;
 	char *p;
@@ -2350,10 +2354,11 @@ static void scan_bios_plugins(void)
 	memcards[0] = "(none)";
 	bios_i = gpu_i = spu_i = mc_i = 1;
 
-	snprintf(fname, sizeof(fname), "%s/", Config.BiosDir);
+	// Clort we just hardcoded the dir snprintf(fname, sizeof(fname), "%s/", Config.BiosDir);
 	dir = opendir(fname);
 	if (dir == NULL) {
-		perror("scan_bios_plugins bios opendir");
+		perror("scan_bios_plugins bios opendir failed");
+                printf("\n Clort: wanted %s directory\n",fname); // Clort more debug
 		goto do_plugins;
 	}
 
@@ -2440,7 +2445,7 @@ do_plugins:
 	closedir(dir);
 
 do_memcards:
-	dir = opendir("." MEMCARD_DIR);
+	dir = opendir(MEMCARD_DIR); // Clort removed "." cause i want to specify the memcard dir
 	if (dir == NULL) {
 		perror("scan_bios_plugins memcards opendir");
 		return;
@@ -2460,7 +2465,7 @@ do_memcards:
 		if (ent->d_type != DT_REG && ent->d_type != DT_LNK)
 			continue;
 
-		snprintf(fname, sizeof(fname), "." MEMCARD_DIR "%s", ent->d_name);
+		snprintf(fname, sizeof(fname), MEMCARD_DIR "%s", ent->d_name); // Clort removed "."
 		if (stat(fname, &st) != 0) {
 			printf("bad memcard file: %s\n", ent->d_name);
 			continue;
@@ -2498,12 +2503,15 @@ void menu_init(void)
 	last_vout_bpp = 16;
 
 	g_menubg_src_ptr = calloc(g_menuscreen_w * g_menuscreen_h * 2, 1);
+//	g_splash_src_ptr = calloc(g_menuscreen_w * g_menuscreen_h * 2, 1); // Clort splashscreen
 	g_menubg_ptr = calloc(g_menuscreen_w * g_menuscreen_h * 2, 1);
 	if (g_menubg_src_ptr == NULL || g_menubg_ptr == NULL) {
 		fprintf(stderr, "OOM\n");
 		exit(1);
 	}
 
+//	emu_make_path(buff, "skin/splashscrn.png", sizeof(buff)); // Clort - load splashscreen
+//	readpng(g_splash_src_ptr, buff, READPNG_BG, g_menuscreen_w, g_menuscreen_h);
 	emu_make_path(buff, "skin/background.png", sizeof(buff));
 	readpng(g_menubg_src_ptr, buff, READPNG_BG, g_menuscreen_w, g_menuscreen_h);
 
@@ -2534,6 +2542,7 @@ void menu_init(void)
 	me_enable(e_menu_keyconfig, MA_CTRL_NUBS_BTNS, MENU_SHOW_NUBS_BTNS);
 	me_enable(e_menu_keyconfig, MA_CTRL_VIBRATION, MENU_SHOW_VIBRATION);
 	me_enable(e_menu_keyconfig, MA_CTRL_DEADZONE, MENU_SHOW_DEADZONE);
+
 }
 
 void menu_notify_mode_change(int w, int h, int bpp)
@@ -2542,7 +2551,32 @@ void menu_notify_mode_change(int w, int h, int bpp)
 	last_vout_h = h;
 	last_vout_bpp = bpp;
 }
+/* Clort - giving up on this for now
+void menu_show_splash(void) // Clort draw a splash screen and i'm clueless
+{
 
+        if (GPU_close != NULL) {
+                int ret = GPU_close();
+                if (ret)
+                        fprintf(stderr, "Warning: GPU_close returned %d\n", ret);
+        }
+
+        plat_video_menu_enter(ready_to_go);
+
+	memcpy(g_menubg_ptr, g_splash_src_ptr, g_menuscreen_w * g_menuscreen_h * 2);
+
+	if (pl_vout_buf != NULL && ready_to_go) {
+		int x = max(0, g_menuscreen_w - last_vout_w);
+		int y = max(0, g_menuscreen_h / 2 - last_vout_h / 2);
+		int w = min(g_menuscreen_w, last_vout_w);
+		int h = min(g_menuscreen_h, last_vout_h);
+		u16 *d = (u16 *)g_menubg_ptr + g_menuscreen_w * y + x;
+		char *s = pl_vout_buf;
+
+	}
+        //sleep(10); // Clort
+}
+*/
 static void menu_leave_emu(void)
 {
 	if (GPU_close != NULL) {
@@ -2573,7 +2607,6 @@ static void menu_leave_emu(void)
 			}
 		}
 	}
-
 	if (ready_to_go)
 		cpu_clock = plat_target_cpu_clock_get();
 }

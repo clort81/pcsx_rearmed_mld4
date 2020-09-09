@@ -1,6 +1,6 @@
 CC = $(CROSS_COMPILE)gcc
 CFLAGS += -DTEXTURE_CACHE_4BPP -DTEXTURE_CACHE_8BPP
-CFLAGS += -Wall -ggdb
+CFLAGS += -Wall 
 CFLAGS += -fno-strict-aliasing
 
 CFLAGS += `sdl-config --cflags`

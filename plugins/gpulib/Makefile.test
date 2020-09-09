@@ -5,7 +5,7 @@ CC_ = $(CROSS_COMPILE)gcc
 ARCH = $(shell $(CC) -v 2>&1 | grep -i 'target:' | awk '{print $$2}' | awk -F '-' '{print $$1}')
 HAVE_NEON = $(shell $(CC_) -E -dD $(CFLAGS) gpu.h | grep -q '__ARM_NEON__ 1' && echo 1)
 
-CFLAGS += -ggdb -Wall -DTEST
+CFLAGS += -Wall -DTEST
 ifndef DEBUG
 CFLAGS += -O2
 endif

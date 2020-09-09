@@ -1,0 +1,13 @@
+pcsx /usr/games/
+plugins/spunull/spunull.so /usr/games/plugins
+plugins/gpu_unai/gpu_unai.so /usr/games/plugins
+plugins/gpu_neon/gpu_neon.so /usr/games/plugins
+plugins/dfxvideo/gpu_peops.so /usr/games/plugins
+plugins/gpu-gles/gpu_gles.so /usr/games/plugins
+.pcsx/* /home/user/.pcsx
+data/pcsxmld4.desktop /usr/share/applications
+hicolor/26x26/hildon/pcsxmld4.png /usr/share/icons
+hicolor/40x40/hildon/pcsxmld4.png /usr/share/icons
+hicolor/48x48/hildon/pcsxmld4.png /usr/share/icons
+hicolor/64x64/hildon/pcsxmld4.png /usr/share/icons
+pcsx /usr/games/
